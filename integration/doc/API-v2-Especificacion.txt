@@ -1,0 +1,20 @@
+Resumen
+
+Esta API permite acceder a servicios de Pay per TIC para integradores y carriers (sistemas que se integran con Pay per TIC para automatizar las conbranzas de sus clientes
+
+Para utilizar la API se requiere de un HASH que se deberá solicitar a integraciones@paypertic.com
+
+Métodos
+
+/api2/cobranzas/importar/csv - Importar cobranzas para el periodo en curso, a través de un archivo CSV
+/api2/cobranzas/exportar/csv - Revisar el estado de las cobranzas para el periodo en curso, en CSV plano
+
+
+
+
+
+
+
+
+
+
