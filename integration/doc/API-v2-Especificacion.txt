@@ -1,15 +1,81 @@
 Resumen
+-------
 
 Esta API permite acceder a servicios de Pay per TIC para integradores y carriers (sistemas que se integran con Pay per TIC para automatizar las conbranzas de sus clientes
 
 Para utilizar la API se requiere de un HASH que se deberá solicitar a integraciones@paypertic.com
 
+
 Métodos
+-------
 
 /api2/cobranzas/importar/csv - Importar cobranzas para el periodo en curso, a través de un archivo CSV
 /api2/cobranzas/exportar/csv - Revisar el estado de las cobranzas para el periodo en curso, en CSV plano
+/api2/cobranzas/descargar/csv - Descargar archivo CSV con el estado de las cobranzas para el periodo en curso
 
 
+_______________________________________________________________________________________________________________________________
+
+Importar Cobranzas
+------------------
+
+Importar cobranzas para el periodo en curso, a través de un archivo CSV
+
+URL: http://pagos.paypertic.com/api2/cobranzas/importar/csv
+Metodo: POST
+
+Variables de invocación:
+
+(obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+(obligatorio) "file": archivo en formato CSV de acuerdo al modelo (ver ejemplo en https://github.com/paypertic/integration-testing/blob/master/integration/modelos/csv/ejemplo-archivo-a-cobrar.csv)
+
+
+Valores de retorno:
+
+OK: <periodo en curso> - <N registros importados> [- <N registros fallidos/por errores de formato>]
+ERROR: <descripcion del error>
+
+
+_______________________________________________________________________________________________________________________________ 
+
+Exportar Cobranzas
+------------------
+
+Revisar el estado de las cobranzas para el periodo en curso, en CSV plano
+
+URL: http://pagos.paypertic.com/api2/cobranzas/exportar/csv
+Métodos: GET, POST
+
+Variables de invocación:
+
+(obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+"periodo": periodo a consultar (por defecto, periodo en curso)
+
+Valores de retorno:
+
+OK: CSV plano con formato similar al de importacion, con 2 nuevas columnas: estado actual, y motivo de rechazo (para cobros rechazados)
+ERROR: <descripcion del error>
+
+_______________________________________________________________________________________________________________________________
+
+Descargar Cobranzas
+-------------------
+
+Descargar archivo CSV con el estado de las cobranzas para el periodo en curso
+
+URL: http://pagos.paypertic.com/api2/cobranzas/descargar/csv
+Métodos: GET, POST
+
+Variables de invocación:
+
+(obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+"periodo": periodo a consultar (por defecto, periodo en curso)
+
+
+Valores de retorno:
+
+OK: descarga de archivo CSV con formato similar al de importacion, con 2 nuevas columnas: estado actual, y motivo de rechazo (para cobros rechazados)
+ERROR: <descripcion del error>
 
 
 
