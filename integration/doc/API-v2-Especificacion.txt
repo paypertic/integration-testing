@@ -35,6 +35,22 @@ Valores de retorno:
 OK: <periodo en curso> - <N registros importados> [- <N registros fallidos/por errores de formato>]
 ERROR: <descripcion del error>
 
+--------------------------------------------------------
+Especificacion de campos del archivo a importar CSV
+IDCliente;NombreCliente;CelularCliente;TelefonoCliente;MailCliente;IDConcepto;DescripcionConcepto;Monto;Opcional1;Opcional2
+
+IDCliente: (OBLIGATORIO) identificador alfanumérico  del cliente / socio / alumno / destinatario del servicio a cobrar
+NombreCliente: (OBLIGATORIO) Nombre y Apellido del cliente, identificador "humano"
+CelularCliente; Nro de celular del cliente 
+TelefonoCliente: Nro de telefono fijo del cliente
+MailCliente: (OBLIGATORIO) Direccion de e-mail del cliente - sin este dato, no se puede invitar a adherir al pagador
+IDConcepto: (OBLIGATORIO) Identificador alfanumérico del concepto a cobrar, puede correponder a un ID del sistema a integrarse o tipo de concepto
+DescripcionConcepto: Descripcion explicativa del concepto a cobrar, ej: Cuota Social, Basquet Infantil, Gimnasio, etc.
+Monto: (OBLIGATORIO) NUMERICO monto a cobrar, en pesos. Los centavos con punto decimal, ej: 2786.35 
+Opcional1: campo opcional para datos adicionales, que luego quiera usarse para identificar el cobro
+Opcional2: campo opcional para datos adicionales, que luego quiera usarse para identificar el cobro
+
+
 
 _______________________________________________________________________________________________________________________________ 
 
@@ -49,7 +65,16 @@ Métodos: GET, POST
 Variables de invocación:
 
 (obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+
+//TODO - las variables opcionales no están aún implementadas, cuando estén listas se borrará esta nota TO-DO
+Variables opcionales (filtros de búsqueda): 
 "periodo": periodo a consultar (por defecto, periodo en curso)
+"id_cliente": cobranzas correspondientes a IDCliente
+"id_concepto": cobranzas correpondientes a IDConcepto
+"opcional1": cobranzas correspondientes al valor de Opcional 1 indicado
+"opcional2": cobranzas correspondientes al valor de Opcional 2 indicado
+Las variables opcionales actúan como filtros, si se envían más de uno refinan el filtro (trabajan como AND)
+
 
 Valores de retorno:
 
