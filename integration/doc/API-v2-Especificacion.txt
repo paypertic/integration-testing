@@ -1,19 +1,31 @@
 Resumen
 -------
 
-Esta API permite acceder a servicios de Pay per TIC para integradores y carriers (sistemas que se integran con Pay per TIC para automatizar las conbranzas de sus clientes
+Esta API permite acceder a servicios de Pay per TIC.
+Su uso está destinado a:
+a) integradores (quienes desarrollan el sistema para una institucion que quiere utilizar Pay per TIC de forma automática)
+Para utilizar la API de institucion se requiere de un HASH que se deberá solicitar a integraciones@paypertic.com
 
-Para utilizar la API se requiere de un HASH que se deberá solicitar a integraciones@paypertic.com
-
+b) carriers (sistemas multicliente que se integran con Pay per TIC para las cobranzas de diversas instituciones cobradoras)
+Para utilizar la API de carrier se requiere de un HASH que se deberá solicitar a integraciones@paypertic.com
+Luego del alta de cada cliente, se podrá utilizar la API de institucion cuyo HASH se obtiene mediante la API de carrier.
 
 Métodos
 -------
 
+API para instituciones cobradoras (requieren HASH de institución cobradora)
 /api2/cobranzas/importar/csv - Importar cobranzas para el periodo en curso, a través de un archivo CSV
-/api2/cobranzas/exportar/csv - Revisar el estado de las cobranzas para el periodo en curso, en CSV plano
-/api2/cobranzas/descargar/csv - Descargar archivo CSV con el estado de las cobranzas para el periodo en curso
+/api2/cobranzas/exportar/csv - Revisar el estado de cobranzas, en CSV plano
+/api2/cobranzas/descargar/csv - Descargar archivo CSV con el estado de las cobranzas
 
+API para carriers (requieren HASH de carrier)
+/api2/carrier/institucion/crear - Alta de institución cobradora. Permite el autoprovisionamiento y retorna HASH de institucion
+/api2/carrier/institucion/ver_hash - Ver HASH de institución cobradora
 
+_______________________________________________________________________________________________________________________________ 
+_______________________________________________________________________________________________________________________________ 
+
+API de institución cobradora
 _______________________________________________________________________________________________________________________________
 
 Importar Cobranzas
@@ -26,7 +38,7 @@ Metodo: POST
 
 Variables de invocación:
 
-(obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+(obligatorio) "hash": HASH para identificación y autorización de cliente (se obtiene por la API de carrier o solicitar a integraciones@paypertic.com)
 (obligatorio) "file": archivo en formato CSV de acuerdo al modelo (ver ejemplo en https://github.com/paypertic/integration-testing/blob/master/integration/modelos/csv/ejemplo-archivo-a-cobrar.csv)
 
 
@@ -64,12 +76,11 @@ Métodos: GET, POST
 
 Variables de invocación:
 
-(obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
+(obligatorio) "hash": HASH para identificación y autorización de cliente (se obtiene por la API de carrier o solicitar a integraciones@paypertic.com)
 
-//TODO - las variables opcionales no están aún implementadas, cuando estén listas se borrará esta nota TO-DO
 Variables opcionales (filtros de búsqueda): 
-"periodo": periodo a consultar (por defecto, periodo en curso)
-"id_cliente": cobranzas correspondientes a IDCliente
+"periodo": periodo a consultar (por defecto, periodo en curso) - permite comodin "*" para retornar TODOS LOS PERIODOS
+"id_cliente": cobranzas correspondientes a IDCliente (por defecto, todos los clientes)
 "id_concepto": cobranzas correpondientes a IDConcepto
 "opcional1": cobranzas correspondientes al valor de Opcional 1 indicado
 "opcional2": cobranzas correspondientes al valor de Opcional 2 indicado
@@ -103,6 +114,66 @@ OK: descarga de archivo CSV con formato similar al de importacion, con 2 nuevas 
 ERROR: <descripcion del error>
 
 
+_______________________________________________________________________________________________________________________________ 
+_______________________________________________________________________________________________________________________________ 
+
+API de carrier
+_______________________________________________________________________________________________________________________________ 
+
+
+Alta de institución cobradora
+-----------------------------
+
+Crea una nueva institución cobradora, obteniendo el HASH de institucion para poder luego realizar las cobranzas
+
+NOTA: Ademas de los datos básicos de la institución se requiere disponer de una cuenta de correo con acceso SMTP para enviar
+los avisos de cobranza, fechas de vencimientos, etc. a los pagadores destinatarios. Se recomienda crear una cuenta de correo
+con el dominio institucional (por ejemplo cobranzas@la-institucion.com ) para dar confianza respecto del origen de los mensajes,
+evitando filtros antispam, etc.
+
+
+URL: http://pagos.paypertic.com/api2/carrier/institucion/crear
+Metodo: POST
+
+Variables de invocación:
+
+(obligatorio) "hash": HASH para identificación y autorización del CARRIER (solicitar a integraciones@paypertic.com)
+(obligatorio) "cuit": CUIT de la institución (NUMÉRICO de 11 posiciones, sin guiones ni espacios)
+(obligatorio) "nombre": Nombre de la institución
+(obligatorio) "mail": Mail de la institución
+(obligatorio) "domicilio": Domicilio de la institución
+(obligatorio) "telefono": Teléfono de la institución
+(obligatorio) "smtpuser": Datos de cuenta para envío de e-mails a los pagadores: usuario SMTP 
+(obligatorio) "smtppass": Datos de cuenta para envío de e-mails a los pagadores: password SMTP
+(obligatorio) "smtphost": Datos de cuenta para envío de e-mails a los pagadores: servidor SMTP  - ej: smtp.la-institucion.com
+(opcional)    "smtpport": Datos de cuenta para envío de e-mails a los pagadores: puerto SMTP (valor por defecto 587)
+
+
+Valores de retorno:
+
+Si el alta es exitosa: <hash-de-institucion>
+Si hay algún fallo: ERROR: <descripcion del error>
+_______________________________________________________________________________________________________________________________ 
+
+Ver HASH de institución cobradora
+---------------------------------
+
+Recupera el HASH de una institución cobradora existente
+
+URL: http://pagos.paypertic.com/api2/carrier/institucion/ver_hash
+Metodos: GET, POST
+
+Variables de invocación:
+
+(obligatorio) "hash": HASH para identificación y autorización del CARRIER (solicitar a integraciones@paypertic.com)
+(obligatorio) "cuit": CUIT de la institución (NUMÉRICO de 11 posiciones, sin guiones ni espacios)
+
+Valores de retorno:
+
+Si hay registro de la institucion: <hash-de-institucion>
+Si no hay registro de la institucion: ERROR: El CUIT no está registrado 
+Si hay algún fallo: ERROR: <descripcion del error>
+_______________________________________________________________________________________________________________________________ 
 
 
 
