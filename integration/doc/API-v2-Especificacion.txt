@@ -79,7 +79,7 @@ Variables de invocación:
 (obligatorio) "hash": HASH para identificación y autorización de cliente (se obtiene por la API de carrier o solicitar a integraciones@paypertic.com)
 
 Variables opcionales (filtros de búsqueda): 
-"periodo": periodo a consultar (por defecto, periodo en curso) - permite comodin "*" para retornar TODOS LOS PERIODOS
+"periodo": periodo a consultar - formato YYYYMM (por defecto, periodo en curso) - permite comodin "*" para retornar TODOS LOS PERIODOS
 "id_cliente": cobranzas correspondientes a IDCliente (por defecto, todos los clientes)
 "id_concepto": cobranzas correpondientes a IDConcepto
 "opcional1": cobranzas correspondientes al valor de Opcional 1 indicado
@@ -105,7 +105,12 @@ Métodos: GET, POST
 Variables de invocación:
 
 (obligatorio) "hash": HASH para identificación y autorización de cliente (solicitar a integraciones@paypertic.com)
-"periodo": periodo a consultar (por defecto, periodo en curso)
+"periodo": periodo a consultar - formato YYYYMM (por defecto, periodo en curso) - permite comodin "*" para retornar TODOS LOS PERIODOS
+"id_cliente": cobranzas correspondientes a IDCliente (por defecto, todos los clientes)
+"id_concepto": cobranzas correpondientes a IDConcepto
+"opcional1": cobranzas correspondientes al valor de Opcional 1 indicado
+"opcional2": cobranzas correspondientes al valor de Opcional 2 indicado
+Las variables opcionales actúan como filtros, si se envían más de uno refinan el filtro (trabajan como AND)
 
 
 Valores de retorno:
@@ -140,13 +145,22 @@ Variables de invocación:
 (obligatorio) "hash": HASH para identificación y autorización del CARRIER (solicitar a integraciones@paypertic.com)
 (obligatorio) "cuit": CUIT de la institución (NUMÉRICO de 11 posiciones, sin guiones ni espacios)
 (obligatorio) "nombre": Nombre de la institución
-(obligatorio) "mail": Mail de la institución
 (obligatorio) "domicilio": Domicilio de la institución
-(obligatorio) "telefono": Teléfono de la institución
-(obligatorio) "smtpuser": Datos de cuenta para envío de e-mails a los pagadores: usuario SMTP 
-(obligatorio) "smtppass": Datos de cuenta para envío de e-mails a los pagadores: password SMTP
-(obligatorio) "smtphost": Datos de cuenta para envío de e-mails a los pagadores: servidor SMTP  - ej: smtp.la-institucion.com
-(opcional)    "smtpport": Datos de cuenta para envío de e-mails a los pagadores: puerto SMTP (valor por defecto 587)
+
+(obligatorio) "resp_nombre": Nombre de un responsable / persona de contacto
+(obligatorio) "resp_cargo": Cargo del responsable / persona de contacto
+(obligatorio) "resp_mail": Mail del responsable / persona de contacto
+(obligatorio) "resp_telefono": Teléfono del responsable / persona de contacto
+
+(opcional)    "ante_iva":	Condición ante el IVA de la institución 
+													Valores posibles: 0 (No Inscripto)
+																						1 (Responsable Inscripto)
+													valor por defecto "0" (No Inscripto)
+
+(obligatorio) "smtp_user": Datos de cuenta para envío de e-mails a los pagadores: usuario SMTP 
+(obligatorio) "smtp_pass": Datos de cuenta para envío de e-mails a los pagadores: password SMTP
+(obligatorio) "smtp_host": Datos de cuenta para envío de e-mails a los pagadores: servidor SMTP  - ej: smtp.la-institucion.com
+(opcional)    "smtp_port": Datos de cuenta para envío de e-mails a los pagadores: puerto SMTP (valor por defecto 587)
 
 
 Valores de retorno:

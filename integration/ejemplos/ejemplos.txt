@@ -1,0 +1,14 @@
+Ejemplos invocación de API
+
+---------------------------------------
+Usando CURL
+
+Importar cobranzas
+
+curl -v -X POST -F hash=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx -F file=@archivo-de-prueba.csv http://pagos.paypertic.com/api2/cobranzas/importar/csv
+
+
+Crear una institución cobradora
+
+curl -v -X POST -d hash=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx -d cuit=30123456789 -d nombre="Super Producciones SRL" -d domicilio="Cucha Cucha 1234 - C.A.B.A." -d resp_nombre="Juan González" -d resp_cargo="Socio Gerente" -d resp_mail=gonzalez@superprod.com -d resp_telefono="(011)47860098" -d ante_iva=0 -d smtp_user=cobranzas -d smtp_pass=cjhs63hb -d smtp_host=smtp.superprod.com http://pagos.paypertic.com/api2/carrier/institucion/crear
+
