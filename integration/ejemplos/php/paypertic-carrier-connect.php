@@ -16,6 +16,7 @@ $HASH = trim(file_get_contents("paypertic-carrier.hash"));
 
 //URLS de la API v2 para carriers
 $URL = "http://pagos.paypertic.com/api2/carrier/";
+
 $URL_API["crear_institucion"] = $URL . "institucion/crear";
 
 function curl_post($url, $param_array){
@@ -33,13 +34,17 @@ function curl_post($url, $param_array){
 // traer datos del formulario / request
 $cuit = $_REQUEST["cuit"];
 $nombre = $_REQUEST["nombre"];
-$domicilio = $_REQUEST["domicilio"];
+//$domicilio = $_REQUEST["domicilio"];
 
 $resp_nombre = $_REQUEST["resp_nombre"];
 $resp_cargo = $_REQUEST["resp_cargo"];
 $resp_mail = $_REQUEST["resp_mail"];
 $resp_telefono = $_REQUEST["resp_telefono"];
-$resp_horario = $_REQUEST["resp_horario"];
+
+$cobros_nombre = $_REQUEST["cobros_nombre"];
+$cobros_horario = $_REQUEST["cobros_horario"];
+$cobros_mail = $_REQUEST["cobros_mail"];
+$cobros_telefono = $_REQUEST["cobros_telefono"];
 
 $smtp_user = $_REQUEST["smtp_user"];
 $smtp_pass = $_REQUEST["smtp_pass"];
@@ -57,13 +62,17 @@ $post2paypertic = array(
 
 	"cuit"=>"$cuit",
 	"nombre"=>"$nombre",
-	"domicilio"=>"$domicilio",
+//	"domicilio"=>"$domicilio",
 
 	"resp_nombre"=>"$resp_nombre",
 	"resp_cargo"=>"$resp_cargo",
 	"resp_mail"=>"$resp_mail",
 	"resp_telefono"=>"$resp_telefono",
-	"resp_horario"=>"$resp_horario",
+
+	"cobros_nombre"=>"$cobros_nombre",
+	"cobros_horario"=>"$cobros_horario",
+	"cobros_mail"=>"$cobros_mail",
+	"cobros_telefono"=>"$cobros_telefono",
 
 	"smtp_user"=>"$smtp_user",
 	"smtp_pass"=>"$smtp_pass",
@@ -77,17 +86,19 @@ $post2paypertic = array(
 
 
 //aquí se conecta con el sitio de Pay per TIC para crear la institucion
-$result = curl_post($URL_API["crear_institucion"], $post);
+$result = curl_post($URL_API["crear_institucion"], $post2paypertic);
 
 $redirect = $_REQUEST["redirect"];
+if (empty($redirect)) $redirect = "http://www.paypertic.com.ar";
 if (substr($result, 0, 6) === "ERROR:") {
-	echo "La entidad cobradora NO se registr&oacute; correctamente: $result";
+	echo "La Entidad Cobradora NO se registr&oacute; correctamente: $result<br/>";
 	echo "Para reintentarlo, vuelva al sitio <a href=\"$redirect\">haciendo clic aqu&iacute;</a>.";
 }
-elseif (substr($result, 0, 3) === "OK:") {
-	header("refresh:1;url=$redirect"); 
-	echo "La entidad cobradora se registr&oacute; correctamente: $result";
-	echo "En un segundo lo redirigiremos al sitio, si no funciona <a href=\"$redirect\">haga clic aqu&iacute;</a>.";
+else {
+	header("refresh:3;url=$redirect"); 
+	echo "La Entidad Cobradora se registr&oacute; correctamente: $result<br/>";
+	echo "Recibir&aacute; un e-mail en la cuenta <b>$resp_mail</b> con las instrucciones para utilizar la plataforma Pay per TIC<br/><br/>";
+	echo "En un segundo lo redirigiremos al sitio, si no redirige <a href=\"$redirect\">haga clic aqu&iacute;</a>.";
 }
 
 
